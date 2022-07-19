@@ -1,14 +1,8 @@
 const express = require('express');
 const cors =  require('cors');
 const bodyParser = require('body-parser');
-const {addNewUser} = require('./services/addNewUser');
-const {scanUserTable, queryAllUsersByCustomerId, getUserByCustomerIdAndEmail } = require("./services/getUsers");
-const { deleteUserByEmail } = require("./services/deleteUserByEmail");
-const { updateUserInfo } = require("./services/updateUser");
-const { batchWriteUsers } = require("./services/batchWriteUsers");
-const { batchReadUsers } = require("./services/batchReadUsers");
-const { batchDeleteUsers } = require("./services/batchDeleteUsers");
-const { getUserByRole, getUserByRoleAndGender } = require("./services/getUserByRole");
+const {UserServices} = require('./services/userServices');
+
 
 const app = express();
 const port = 3000;
@@ -18,16 +12,16 @@ app.use(bodyParser.json());
 
 app.post('/addUser', async (req, res) => {
     try {
-        const data = await addNewUser(req.body);
+        const data = await new UserServices().addNewUser(req.body);
         res.send(data);
-    } catch (error) {
+    } catch (error) {````
         res.send(error);
     }
 });
 
 app.get('/queryAllUsersByCustomerId', async (req, res) => {
     try {
-        const data = await queryAllUsersByCustomerId(req.query.customerId);
+        const data =  await new UserServices().queryAllUsersByCustomerId(req.query.customerId);
         res.send(data);
     } catch (error) {
         res.send(error);
@@ -36,7 +30,7 @@ app.get('/queryAllUsersByCustomerId', async (req, res) => {
 
 app.get('/getUserByCustomerIdAndEmail', async (req, res) => {
     try {
-        const data = await getUserByCustomerIdAndEmail(req.query.customerId, req.query.email);
+        const data = await new UserServices().getUserByCustomerIdAndEmail(req.query.customerId, req.query.email);
         res.send(data);
     } catch (error) {
         res.send(error);
@@ -45,7 +39,7 @@ app.get('/getUserByCustomerIdAndEmail', async (req, res) => {
 
 app.get('/scanUsers', async (req, res) => {
     try {
-        const data = await scanUserTable();
+        const data = await new UserServices().scanUserTable();
         res.send(data);
     } catch (error) {
         res.send(error);
@@ -57,7 +51,7 @@ app.delete('/deleteUserByEmail', (req, res) => {
         res.status(404).send('email not found');
     }
 
-    deleteUserByEmail(req.query.email)
+    new UserServices().deleteUserByEmail(req.query.email)
     .then(response => {
         res.status(200).send(response);
     })
@@ -68,16 +62,17 @@ app.delete('/deleteUserByEmail', (req, res) => {
 
 app.post('/updateUser', async (req, res) => {
     try {
-        const data = await updateUserInfo(req.body);
+        const data = await new UserServices().updateUserInfo(req.body);
         res.status(200).send(data);
     } catch (error) {
         res.status(400).send(error);
     }
 });
 
-app.post('/batchWriteUsers', async(req, res) => {
+app.post('/batchWriteUsers', async (req, res) => {
     try {
-        const data = await batchWriteUsers(req.body.startIndex, req.body.count);
+        const data = await new UserServices().batchWriteUsers(req.body.startIndex, req.body.count);
+        console.log('data: ', data);
         res.send(data);
     } catch (error) {
         res.status(400).send(error)
@@ -86,7 +81,7 @@ app.post('/batchWriteUsers', async(req, res) => {
 
 app.get('/batchReadUsers', async(req, res) => {
     try {
-        const data = await batchReadUsers();
+        const data = await new UserServices().batchReadUsers();
         res.send(data);
     } catch (error) {
         res.status(400).send(error);
@@ -96,8 +91,8 @@ app.get('/batchReadUsers', async(req, res) => {
 
 app.post('/batchDeleteUsers', async (req, res) => {
     try {
-        await batchDeleteUsers(req.body.emails);
-        res.send('batch delete success');
+        const data = await new UserServices().batchDeleteUsers(req.body.emails);
+        res.send(data);
     } catch (error) {
         res.status(400).send(error)
     }
@@ -105,7 +100,7 @@ app.post('/batchDeleteUsers', async (req, res) => {
 
 app.get('/getUserByRole', async (req, res) => {
     try {
-        const data = await getUserByRole(req.query.role);
+        const data = await new UserServices().getUserByRole(req.query.role);
         res.send(data);
     } catch (error) {
         res.send(error);
@@ -114,7 +109,7 @@ app.get('/getUserByRole', async (req, res) => {
 
 app.get('/getUserByRoleAndGender', async (req, res) => {
     try {
-        const data = await getUserByRoleAndGender(req.query.role, req.query.gender);
+        const data = await new UserServices().getUserByRoleAndGender(req.query.role, req.query.gender);
         res.send(data);
     } catch (error) {
         res.send(error);

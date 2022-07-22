@@ -1,4 +1,5 @@
 const {ddbClient} = require('../dbClient/ddbClient');
+const { TABLE_NAME } = require('../shared/constants');
 
 const getItem = (params) => {
     return ddbClient.get(params).promise();
@@ -62,13 +63,17 @@ const putItem = async (params) => {
     return ddbClient.put(params).promise();
 }
 
+const updateItem = async (params) => {
+    return ddbClient.update(params).promise();
+}
+
 const batchWriteItems = async (params, depth = 0) => {
     const response = await ddbClient.batchWrite(params).promise();
     const failedRequestTables = Object.keys(response.UnprocessedItems);
 
     if (failedRequestTables.length > 0) {
             if (depth === 3) {
-                throw new Error('retry more than 3 times and still failed');
+                return response.UnprocessedItems[TABLE_NAME];
             }
 
             const retryParams = {
@@ -81,7 +86,7 @@ const batchWriteItems = async (params, depth = 0) => {
                 batchWriteItems(retryParams, depth + 1);
             }, 2 * depth * 1000);
     } else {
-        return 'success';
+        return [];
     }
 }
 
@@ -95,6 +100,7 @@ module.exports = {
     scanAll,
     deleteItem,
     putItem,
+    updateItem,
     batchGetItems,
     batchWriteItems
 }

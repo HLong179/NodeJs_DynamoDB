@@ -1,5 +1,5 @@
 class User {
-    constructor(firstName, lastName, role, gender, email, password, metadata) {
+    constructor(pk, sk, firstName, lastName, role, gender, email, password, metadata) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
@@ -7,6 +7,8 @@ class User {
         this.email = email;
         this.password = password;
         this.metadata = metadata;
+        this.pk = pk;
+        this.sk = sk;
     }
 }
 

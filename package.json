@@ -1,0 +1,27 @@
+{
+  "name": "nodejs_dynamodb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HLong179/NodeJs_DynamoDB.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HLong179/NodeJs_DynamoDB/issues"
+  },
+  "homepage": "https://github.com/HLong179/NodeJs_DynamoDB#readme",
+  "dependencies": {
+    "aws-sdk": "^2.1173.0",
+    "body-parser": "^1.20.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "uuid": "^8.3.2"
+  }
+}
